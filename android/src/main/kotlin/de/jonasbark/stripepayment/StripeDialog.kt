@@ -1,6 +1,7 @@
 package de.jonasbark.stripepayment
 
 import android.app.DialogFragment
+import android.app.ProgressDialog
 import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -67,10 +68,17 @@ class StripeDialog : DialogFragment() {
     var tokenListener: ((PaymentMethod) -> (Unit))? = null
 
     private fun getToken() {
+
+        var progressDialog : ProgressDialog;
+        progressDialog = ProgressDialog.
+        show(dialog.context,"","Loading",false,false);
+
         val mCardInputWidget =
             view?.findViewById<View>(R.id.card_input_widget) as CardMultilineWidget
 
         if (mCardInputWidget.validateAllFields()) {
+
+            rogressDialog.show();
 
             mCardInputWidget.card?.let { card ->
 
@@ -92,11 +100,16 @@ class StripeDialog : DialogFragment() {
                             view?.findViewById<View>(R.id.progress)?.visibility = View.GONE
                             view?.findViewById<View>(R.id.buttonSave)?.visibility = View.GONE
 
+                            progressDialog?.dismiss();
+
                             tokenListener?.invoke(result)
                             dismiss()
                         }
 
                         override fun onError(error: Exception) {
+
+                            progressDialog?.dismiss();
+
                             view?.findViewById<View>(R.id.progress)?.visibility = View.GONE
                             view?.findViewById<View>(R.id.buttonSave)?.visibility = View.VISIBLE
                             view?.let {
