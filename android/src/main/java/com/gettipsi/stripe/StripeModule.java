@@ -199,18 +199,42 @@ public class StripeModule extends ReactContextBaseJavaModule {
       ArgCheck.nonNull(mStripe);
       ArgCheck.notEmptyString(mPublicKey);
 
-      mStripe.createCardToken(
-        createCard(cardData),
-        mPublicKey,
-        new ApiResultCallback<Token>() {
-          public void onSuccess(Token token) {
-            promise.resolve(convertTokenToWritableMap(token));
-          }
-          public void onError(Exception error) {
-            error.printStackTrace();
-            promise.reject(toErrorCode(error), error.getMessage());
-          }
-        });
+      mStripe.createToken(
+              createCard(cardData),
+              new ApiResultCallback<Token>() {
+                @Override
+                public void onSuccess(@NonNull Token result) {
+                  promise.resolve(convertTokenToWritableMap(result));
+                }
+
+                @Override
+                public void onError(@NonNull Exception e) {
+                  promise.reject(toErrorCode(e), e.getMessage());
+                }
+              }
+//        new Toke() {
+//          public void onSuccess(Token token) {
+//            promise.resolve(convertTokenToWritableMap(token));
+//          }
+//          public void onError(Exception error) {
+//            error.printStackTrace();
+//            promise.reject(toErrorCode(error), error.getMessage());
+//          }
+//        }
+      );
+
+//      mStripe.createCardToken(
+//        createCard(cardData),
+//        mPublicKey,
+//        new ApiResultCallback<Token>() {
+//          public void onSuccess(Token token) {
+//            promise.resolve(convertTokenToWritableMap(token));
+//          }
+//          public void onError(Exception error) {
+//            error.printStackTrace();
+//            promise.reject(toErrorCode(error), error.getMessage());
+//          }
+//        });
     } catch (Exception e) {
       promise.reject(toErrorCode(e), e.getMessage());
     }
@@ -223,18 +247,16 @@ public class StripeModule extends ReactContextBaseJavaModule {
       ArgCheck.notEmptyString(mPublicKey);
 
       mStripe.createBankAccountToken(
-        createBankAccount(accountData),
-        mPublicKey,
-        null,
-        new ApiResultCallback<Token>() {
-          public void onSuccess(Token token) {
-            promise.resolve(convertTokenToWritableMap(token));
-          }
-          public void onError(Exception error) {
-            error.printStackTrace();
-            promise.reject(toErrorCode(error), error.getMessage());
-          }
-        });
+              createBankAccount(accountData),
+              new ApiResultCallback<Token>() {
+                public void onSuccess(Token token) {
+                  promise.resolve(convertTokenToWritableMap(token));
+                }
+                public void onError(Exception error) {
+                  error.printStackTrace();
+                  promise.reject(toErrorCode(error), error.getMessage());
+                }
+              });
     } catch (Exception e) {
       promise.reject(toErrorCode(e), e.getMessage());
     }
@@ -566,7 +588,8 @@ public class StripeModule extends ReactContextBaseJavaModule {
     // Create with Payment Method ID
     } else if (paymentMethodId != null) {
 
-      cpip = ConfirmPaymentIntentParams.createWithPaymentMethodId(paymentMethodId, clientSecret, returnURL, savePaymentMethod, extraParams);
+
+      cpip = ConfirmPaymentIntentParams.createWithPaymentMethodId(paymentMethodId, clientSecret, returnURL);
 
     // Create with Source
     /**

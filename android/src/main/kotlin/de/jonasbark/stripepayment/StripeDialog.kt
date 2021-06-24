@@ -34,7 +34,7 @@ class StripeDialog : DialogFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.activity_stripe, container)
+        return inflater.inflate(R.layout.activity_stripe_card_pay, container)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -99,9 +99,7 @@ class StripeDialog : DialogFragment() {
                         override fun onSuccess(result: PaymentMethod) {
                             view?.findViewById<View>(R.id.progress)?.visibility = View.GONE
                             view?.findViewById<View>(R.id.buttonSave)?.visibility = View.GONE
-
-                            progressDialog?.dismiss();
-
+                            progressDialog?.dismiss()
                             tokenListener?.invoke(result)
                             dismiss()
                         }
