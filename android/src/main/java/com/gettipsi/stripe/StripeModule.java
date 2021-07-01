@@ -199,7 +199,7 @@ public class StripeModule extends ReactContextBaseJavaModule {
       ArgCheck.nonNull(mStripe);
       ArgCheck.notEmptyString(mPublicKey);
 
-      mStripe.createToken(
+      mStripe.createCardToken(
               createCard(cardData),
               new ApiResultCallback<Token>() {
                 @Override
@@ -470,7 +470,7 @@ public class StripeModule extends ReactContextBaseJavaModule {
 
           Source source = mStripe.retrieveSourceSynchronous(sourceId, clientSecret);
 
-          if (Source.SourceFlow.REDIRECT.equals(source.getFlow())) {
+          if (Source.Flow.Redirect.equals(source.getFlow())) {
             Activity currentActivity = getCurrentActivity();
             if (currentActivity == null) {
               promise.reject(
